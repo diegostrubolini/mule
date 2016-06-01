@@ -11,6 +11,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.mule.runtime.config.spring.parsers.specific.DummyComponentWithBinding;
 import org.mule.runtime.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.runtime.config.spring.parsers.specific.ComponentDelegatingDefinitionParser.CheckExclusiveClassAttributeObjectFactoryException;
 import org.mule.runtime.config.spring.util.SpringBeanLookup;

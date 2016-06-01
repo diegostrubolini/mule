@@ -1839,7 +1839,7 @@
                                     </group>
                                     <group>
                                         <title>Transports</title>
-                                        <packages>org.mule.runtime.core.transport.*</packages>
+                                        <packages>org.mule.compatibility.core.transport.*</packages>
                                     </group>
                                     <group>
                                         <title>Testing Framework</title>
