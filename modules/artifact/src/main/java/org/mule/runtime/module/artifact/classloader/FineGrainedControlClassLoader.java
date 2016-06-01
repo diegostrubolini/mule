@@ -6,11 +6,15 @@
  */
 package org.mule.runtime.module.artifact.classloader;
 
+import static java.lang.String.format;
+import static org.mule.runtime.core.util.Preconditions.checkArgument;
 import static org.mule.runtime.module.artifact.classloader.ClassLoaderLookupStrategy.PARENT_FIRST;
 import static org.mule.runtime.module.artifact.classloader.ClassLoaderLookupStrategy.PARENT_ONLY;
-import static org.mule.runtime.core.util.Preconditions.checkArgument;
 
 import java.net.URL;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines a {@link ClassLoader} which enables the control of the class
@@ -21,6 +25,7 @@ import java.net.URL;
  */
 public class FineGrainedControlClassLoader extends GoodCitizenClassLoader implements ClassLoaderLookupPolicyProvider
 {
+    protected static final Log logger = LogFactory.getLog(FineGrainedControlClassLoader.class);
 
     private final ClassLoaderLookupPolicy lookupPolicy;
 
@@ -43,31 +48,39 @@ public class FineGrainedControlClassLoader extends GoodCitizenClassLoader implem
 
         final ClassLoaderLookupStrategy lookupStrategy = lookupPolicy.getLookupStrategy(name);
 
-        if (lookupStrategy == PARENT_ONLY)
+        try
         {
-            result = findParentClass(name);
-        }
-        else if (lookupStrategy == PARENT_FIRST)
-        {
-            try
+            if (lookupStrategy == PARENT_ONLY)
             {
                 result = findParentClass(name);
             }
-            catch (ClassNotFoundException e)
+            else if (lookupStrategy == PARENT_FIRST)
             {
-                result = findClass(name);
+                try
+                {
+                    result = findParentClass(name);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    result = findClass(name);
+                }
+            }
+            else
+            {
+                try
+                {
+                    result = findClass(name);
+                }
+                catch (ClassNotFoundException e)
+                {
+                    result = findParentClass(name);
+                }
             }
         }
-        else
+        catch (ClassNotFoundException e)
         {
-            try
-            {
-                result = findClass(name);
-            }
-            catch (ClassNotFoundException e)
-            {
-                result = findParentClass(name);
-            }
+            logger.warn(format("Lookup strategy for class '%s' is '%s'", name, lookupStrategy));
+            throw e;
         }
 
         if (resolve)
