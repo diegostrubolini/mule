@@ -9,9 +9,8 @@ package org.mule.runtime.module.artifact.classloader;
 
 import static java.util.Collections.unmodifiableSet;
 import static org.mule.runtime.core.util.Preconditions.checkArgument;
-
-import org.mule.runtime.core.util.StringUtils;
 import org.mule.runtime.module.artifact.descriptor.ArtifactDescriptor;
+import org.mule.runtime.core.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Set;
@@ -91,13 +90,5 @@ public class ArtifactClassLoaderFilter implements ClassLoaderFilter
     private String getPackageName(String className)
     {
         return (className.lastIndexOf(PACKAGE_SEPARATOR) < 0) ? EMPTY_PACKAGE : className.substring(0, className.lastIndexOf(PACKAGE_SEPARATOR));
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.getClass().getName() +
-               "{exportedClassPackages: " + exportedClassPackages.toString() +
-               ", exportedResourcePackages:" + exportedResourcePackages + "}";
     }
 }

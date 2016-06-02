@@ -11,7 +11,6 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.mule.runtime.core.util.PropertiesUtils.discoverProperties;
 import static org.mule.runtime.module.artifact.classloader.ArtifactClassLoaderFilter.EXPORTED_CLASS_PACKAGES_PROPERTY;
 import static org.mule.runtime.module.artifact.classloader.ArtifactClassLoaderFilter.EXPORTED_RESOURCE_PACKAGES_PROPERTY;
-
 import org.mule.runtime.module.artifact.classloader.ArtifactClassLoaderFilter;
 import org.mule.runtime.module.artifact.classloader.ClassLoaderFilter;
 
@@ -162,14 +161,6 @@ public class ContainerClassLoaderFilterFactory
 
             }
             return exported;
-        }
-
-        @Override
-        public String toString()
-        {
-            return this.getClass().getName() +
-                   "{moduleClassLoaderFilter: " + moduleClassLoaderFilter.toString() +
-                   ", bootPackages:" + bootPackages.toString() + "}";
         }
     }
 

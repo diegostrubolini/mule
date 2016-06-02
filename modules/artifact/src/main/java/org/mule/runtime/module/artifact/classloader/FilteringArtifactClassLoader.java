@@ -7,7 +7,6 @@
 
 package org.mule.runtime.module.artifact.classloader;
 
-import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static org.mule.runtime.core.util.Preconditions.checkArgument;
 
@@ -54,11 +53,6 @@ public class FilteringArtifactClassLoader extends ClassLoader implements Artifac
         }
         else
         {
-            logger.warn(format("Class '%s' not found in classloader for '%s'.", name, getArtifactName()));
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(format("Filter applied for class '%s': %s", name, filter.toString()));
-            }
             throw new ClassNotFoundException(name);
         }
     }
@@ -72,11 +66,6 @@ public class FilteringArtifactClassLoader extends ClassLoader implements Artifac
         }
         else
         {
-            logger.warn(format("Resource '%s' not found in classloader for '%s'.", name, getArtifactName()));
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(format("Filter applied for resource '%s': %s", name, filter.toString()));
-            }
             return null;
         }
     }
@@ -95,11 +84,6 @@ public class FilteringArtifactClassLoader extends ClassLoader implements Artifac
         }
         else
         {
-            logger.warn(format("Resources '%s' not found in classloader for '%s'.", name, getArtifactName()));
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(format("Filter applied for resources '%s': %s", name, filter.toString()));
-            }
             return new EnumerationAdapter<>(emptyList());
         }
     }
