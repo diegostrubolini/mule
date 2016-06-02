@@ -187,10 +187,6 @@ public class CommonBeanDefinitionCreator extends BeanDefinitionCreator
                         {
                             return !componentBuildingDefinition.isPrototype();
                         }
-                        if (method.getName().equals("getObjectType"))
-                        {
-                            return null;
-                        }
                         return proxy.invokeSuper(obj, args);
                     }
                 }
