@@ -12,7 +12,7 @@
     <transports:endpoint name="out" address="${outbound.destination}" exchange-pattern="one-way" connector-ref="jmsConnector"/>
 
     <flow name="withMuleCorrelationId">
-        <set-property propertyName="#[org.mule.compatibility.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid"/>
+        <set-property propertyName="#[org.mule.runtime.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid"/>
         <transports:outbound-endpoint ref="in" />
     </flow>
 
@@ -31,7 +31,7 @@
         <test:assert expression="#[message.correlationId == 'custom-cid']"/>
         <test:assert expression="#[message.inboundProperties['JMScorrelationId'] == 'custom-cid']"/>
         <!-- MULE Correlatin ID can be overwritten and will be propagated forward -->
-        <set-property propertyName="#[org.mule.compatibility.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid-2"/>
+        <set-property propertyName="#[org.mule.runtime.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid-2"/>
         <transports:outbound-endpoint ref="out" exchange-pattern="request-response"/>
         <test:assert expression="#[message.correlationId == 'custom-cid-2']"/>
         <test:assert expression="#[message.inboundProperties['JMScorrelationId'] == 'custom-cid-2']"/>
@@ -42,6 +42,6 @@
         <test:assert expression="#[message.correlationId == 'custom-cid-2']"/>
         <test:assert expression="#[message.inboundProperties['JMScorrelationId'] == 'custom-cid-2']"/>
         <!-- Overwritten MULE Correlatin ID is not used in ReplyTo message -->
-        <set-property propertyName="#[org.mule.compatibility.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid-3"/>
+        <set-property propertyName="#[org.mule.runtime.core.api.config.MuleProperties.MULE_CORRELATION_ID_PROPERTY]" value="custom-cid-3"/>
     </flow>
 </mule>
