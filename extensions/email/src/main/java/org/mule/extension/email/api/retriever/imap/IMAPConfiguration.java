@@ -7,7 +7,10 @@
 package org.mule.extension.email.api.retriever.imap;
 
 import static org.mule.extension.email.internal.util.EmailConstants.DEFAULT_FOLDER;
+import static org.mule.extension.email.internal.util.EmailConstants.PORT_IMAP;
+import org.mule.extension.email.api.AbstractEmailConfiguration;
 import org.mule.extension.email.api.retriever.RetrieverConfiguration;
+import org.mule.extension.email.api.retriever.RetrieverOperations;
 import org.mule.runtime.extension.api.annotation.Configuration;
 import org.mule.runtime.extension.api.annotation.Operations;
 import org.mule.runtime.extension.api.annotation.Parameter;
@@ -20,11 +23,18 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
  *
  * @since 4.0
  */
-@Operations(IMAPOperations.class)
+@Operations({IMAPOperations.class, RetrieverOperations.class})
 @Providers(IMAPConnectionProvider.class)
 @Configuration(name = "imap")
-public class IMAPConfiguration implements RetrieverConfiguration
+public class IMAPConfiguration extends AbstractEmailConfiguration implements RetrieverConfiguration
 {
+
+    /**
+     * The port number of the mail server. The default value for imap mail servers is 143.
+     */
+    @Parameter
+    @Optional(defaultValue = PORT_IMAP)
+    private String port;
 
     /**
      * The folder from which emails are going to be
@@ -42,6 +52,7 @@ public class IMAPConfiguration implements RetrieverConfiguration
     @Optional(defaultValue = "true")
     private boolean eagerlyFetchContent;
 
+
     /**
      * {@inheritDoc}
      */
@@ -58,5 +69,14 @@ public class IMAPConfiguration implements RetrieverConfiguration
     public boolean isEagerlyFetchContent()
     {
         return eagerlyFetchContent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPort()
+    {
+        return port;
     }
 }

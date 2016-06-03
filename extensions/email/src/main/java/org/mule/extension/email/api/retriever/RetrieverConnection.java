@@ -7,19 +7,16 @@
 package org.mule.extension.email.api.retriever;
 
 import static java.lang.String.format;
-import static org.mule.extension.email.internal.EmailPropertiesFactory.getPropertiesInstance;
-import static org.mule.runtime.api.connection.ConnectionExceptionCode.DISCONNECTED;
+import static org.mule.runtime.api.connection.ConnectionExceptionCode.CREDENTIALS_EXPIRED;
 import static org.mule.runtime.api.connection.ConnectionValidationResult.failure;
 import static org.mule.runtime.api.connection.ConnectionValidationResult.success;
-import org.mule.extension.email.api.EmailConnection;
+import org.mule.extension.email.api.AbstractEmailConnection;
 import org.mule.extension.email.internal.exception.EmailConnectionException;
 import org.mule.extension.email.internal.exception.EmailException;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 
 import java.util.Map;
-import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -30,15 +27,14 @@ import javax.mail.Store;
  *
  * @since 4.0
  */
-public class RetrieverConnection implements EmailConnection
+public class RetrieverConnection extends AbstractEmailConnection
 {
 
-    private final Session session;
     private final Store store;
     private final Folder folder;
 
     /**
-     * Creates a new instance of the of the connection.
+     * Creates a new instance of the of the {@link RetrieverConnection}.
      *
      * @param protocol the desired protocol to use.
      * @param username the username to establish the connection.
@@ -49,7 +45,6 @@ public class RetrieverConnection implements EmailConnection
      * @param readTimeout the socket read timeout
      * @param writeTimeout the socket write timeout
      * @param properties additional custom properties.
-     * @param authenticator custom authenticator to perform the connection with the mail server.
      * @param folder the folder to be opened in order to list emails.
      */
     public RetrieverConnection(String protocol,
@@ -61,11 +56,9 @@ public class RetrieverConnection implements EmailConnection
                                long readTimeout,
                                long writeTimeout,
                                Map<String, String> properties,
-                               Authenticator authenticator,
                                String folder) throws EmailConnectionException
     {
-        Properties sessionProperties = getPropertiesInstance(protocol, host, port, connectionTimeout, readTimeout, writeTimeout, properties);
-        this.session = Session.getInstance(sessionProperties, authenticator);
+        super(protocol, username, password, host, port, connectionTimeout, readTimeout, writeTimeout, properties);
         try
         {
             this.store = session.getStore(protocol);
@@ -125,7 +118,7 @@ public class RetrieverConnection implements EmailConnection
     {
         String errorMessage = "Store is not connected";
         return store.isConnected() ? success()
-                                   : failure(errorMessage, DISCONNECTED, new EmailConnectionException(errorMessage));
+                                   : failure(errorMessage, CREDENTIALS_EXPIRED, new EmailConnectionException(errorMessage));
     }
 
     /**

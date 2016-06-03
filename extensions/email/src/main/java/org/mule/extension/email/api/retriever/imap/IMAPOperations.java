@@ -9,16 +9,11 @@ package org.mule.extension.email.api.retriever.imap;
 import static javax.mail.Flags.Flag.DELETED;
 import static javax.mail.Flags.Flag.SEEN;
 import org.mule.extension.email.api.retriever.RetrieverConnection;
-import org.mule.extension.email.internal.EmailAttributes;
-import org.mule.extension.email.internal.operations.ListOperation;
 import org.mule.extension.email.internal.operations.SetFlagOperation;
 import org.mule.runtime.api.message.MuleMessage;
 import org.mule.runtime.core.api.MuleContext;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.mule.runtime.extension.api.annotation.param.Optional;
-import org.mule.runtime.extension.api.annotation.param.UseConfig;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,18 +28,7 @@ public class IMAPOperations
     @Inject
     private MuleContext context;
 
-    //TODO: ADD MATCHER.
-    //TODO: ADD PAGINATION SUPPORT WHEN AVAILABLE
-    /**
-     * List all the emails in the configured folder.
-     *
-     * @param connection  the corresponding {@link RetrieverConnection} instance.
-     * @return a {@link List} of {@link MuleMessage} carrying all the emails and it's corresponding attributes.
-     */
-    public List<MuleMessage<String, EmailAttributes>> list(@UseConfig IMAPConfiguration config, @Connection RetrieverConnection connection)
-    {
-        return new ListOperation().list(connection, context, config.isEagerlyFetchContent());
-    }
+    private final SetFlagOperation setFlagOperation = new SetFlagOperation();
 
     /**
      * Marks an incoming email as READ
@@ -55,11 +39,10 @@ public class IMAPOperations
      * @param message     the incoming {@link MuleMessage}.
      * @param connection  the corresponding {@link RetrieverConnection} instance.
      * @param emailNumber an optional email number to look up in the folder, if there is no email in the incoming {@link MuleMessage}.
-     * @return
      */
     public void markAsRead(MuleMessage message, @Connection RetrieverConnection connection, @Optional Integer emailNumber)
     {
-        new SetFlagOperation().set(message, connection, emailNumber, SEEN);
+        setFlagOperation.set(message, connection, emailNumber, SEEN);
     }
 
     /**
@@ -74,6 +57,6 @@ public class IMAPOperations
      */
     public void markAsDeleted(MuleMessage message, @Connection RetrieverConnection connection, @Optional Integer emailNumber)
     {
-        new SetFlagOperation().set(message, connection, emailNumber, DELETED);
+        setFlagOperation.set(message, connection, emailNumber, DELETED);
     }
 }

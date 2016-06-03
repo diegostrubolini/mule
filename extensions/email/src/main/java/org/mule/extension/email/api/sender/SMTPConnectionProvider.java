@@ -6,9 +6,7 @@
  */
 package org.mule.extension.email.api.sender;
 
-import static org.mule.extension.email.internal.util.EmailConstants.PORT_SMTP;
 import static org.mule.extension.email.internal.util.EmailConstants.PROTOCOL_SMTP;
-import org.mule.extension.email.api.AbstractEmailProvider;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionHandlingStrategy;
 import org.mule.runtime.api.connection.ConnectionHandlingStrategyFactory;
@@ -24,16 +22,8 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
  * @since 4.0
  */
 @Alias("smtp")
-public class SMTPConnectionProvider extends AbstractEmailProvider implements ConnectionProvider<SMTPConfiguration, SenderConnection>
+public class SMTPConnectionProvider implements ConnectionProvider<SMTPConfiguration, SenderConnection>
 {
-
-    /**
-     * the port number of the mail server.
-     */
-    @Parameter
-    @Optional(defaultValue = PORT_SMTP)
-    protected String port;
-
     /**
      * the username used to connect with the mail server.
      */
@@ -54,7 +44,15 @@ public class SMTPConnectionProvider extends AbstractEmailProvider implements Con
     @Override
     public SenderConnection connect(SMTPConfiguration config) throws ConnectionException
     {
-        return new SenderConnection(PROTOCOL_SMTP, user, password, host, port, connectionTimeout, readTimeout, writeTimeout, properties);
+        return new SenderConnection(PROTOCOL_SMTP,
+                                    user,
+                                    password,
+                                    config.getHost(),
+                                    config.getPort(),
+                                    config.getConnectionTimeout(),
+                                    config.getReadTimeout(),
+                                    config.getWriteTimeout(),
+                                    config.getProperties());
     }
 
     /**

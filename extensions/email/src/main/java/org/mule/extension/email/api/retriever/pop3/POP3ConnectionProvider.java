@@ -6,43 +6,37 @@
  */
 package org.mule.extension.email.api.retriever.pop3;
 
-import static org.mule.extension.email.internal.util.EmailConstants.PORT_IMAP;
 import static org.mule.extension.email.internal.util.EmailConstants.PROTOCOL_POP3;
-import org.mule.extension.email.api.retriever.AbstractRetrieverProvider;
+import org.mule.extension.email.api.retriever.AbstractRetrieverConnectionProvider;
 import org.mule.extension.email.api.retriever.RetrieverConnection;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionHandlingStrategy;
 import org.mule.runtime.api.connection.ConnectionHandlingStrategyFactory;
 import org.mule.runtime.api.connection.ConnectionProvider;
-import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.annotation.Alias;
-import org.mule.runtime.extension.api.annotation.Parameter;
-import org.mule.runtime.extension.api.annotation.param.Optional;
 
+/**
+ * A {@link ConnectionProvider} that returns instances of pop3 based {@link RetrieverConnection}s.
+ *
+ * @since 4.0
+ */
 @Alias("pop3")
-public class POP3ConnectionProvider extends AbstractRetrieverProvider implements ConnectionProvider<POP3Configuration, RetrieverConnection>
+public class POP3ConnectionProvider extends AbstractRetrieverConnectionProvider<POP3Configuration>
 {
-
-    @Parameter
-    @Optional(defaultValue = PORT_IMAP)
-    private String port;
 
     @Override
     public RetrieverConnection connect(POP3Configuration config) throws ConnectionException
     {
-        return new RetrieverConnection(PROTOCOL_POP3, user, password, host, port, connectionTimeout, readTimeout, writeTimeout, properties, null, config.getFolder());
-    }
-
-    @Override
-    public void disconnect(RetrieverConnection connection)
-    {
-        connection.disconnect();
-    }
-
-    @Override
-    public ConnectionValidationResult validate(RetrieverConnection connection)
-    {
-        return connection.validate();
+        return new RetrieverConnection(PROTOCOL_POP3,
+                                       user,
+                                       password,
+                                       config.getHost(),
+                                       config.getPort(),
+                                       config.getConnectionTimeout(),
+                                       config.getReadTimeout(),
+                                       config.getWriteTimeout(),
+                                       config.getProperties(),
+                                       config.getFolder());
     }
 
     @Override

@@ -31,6 +31,10 @@ import java.util.Map;
 public class SenderOperations
 {
 
+    private final SendOperation sendOperation = new SendOperation();
+    private final ForwardOperation forwardOperation = new ForwardOperation();
+    private final ReplyOperation replyOperation = new ReplyOperation();
+
     // TODO: REMOVE WHEN THERE IS DEFAULT PAYLOAD IN THE OPTIONAL ANNOTATION
     private static final String PAYLOAD = "#[payload]";
 
@@ -64,7 +68,7 @@ public class SenderOperations
                      @Optional Map<String, String> headers,
                      @Optional List<EmailAttachment> attachments)
     {
-        new SendOperation().send(connection.getSession(),
+        sendOperation.send(connection.getSession(),
                                  content,
                                  subject,
                                  toAddresses,
@@ -98,7 +102,7 @@ public class SenderOperations
                         @Optional List<String> ccAddresses,
                         @Optional List<String> bccAddresses)
     {
-        new ForwardOperation().forward(connection.getSession(),
+        forwardOperation.forward(connection.getSession(),
                                        muleMessage,
                                        subject,
                                        configuration.getFrom(),
@@ -128,7 +132,7 @@ public class SenderOperations
                       EmailContent content,
                       @Optional(defaultValue = "false") Boolean replyToAll)
     {
-        new ReplyOperation().reply(connection.getSession(),
+        replyOperation.reply(connection.getSession(),
                                    muleMessage,
                                    content,
                                    configuration.getFrom(),

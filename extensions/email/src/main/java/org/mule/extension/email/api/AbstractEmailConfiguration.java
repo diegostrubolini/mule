@@ -8,16 +8,15 @@ package org.mule.extension.email.api;
 
 import org.mule.runtime.extension.api.annotation.Parameter;
 import org.mule.runtime.extension.api.annotation.param.Optional;
-import org.mule.runtime.extension.api.runtime.ConfigurationProvider;
 
 import java.util.Map;
 
 /**
- * Generic contract for all email {@link ConfigurationProvider}s.
+ * Generic contract for all email configurations.
  *
  * @since 4.0
  */
-public abstract class AbstractEmailProvider
+public abstract class AbstractEmailConfiguration
 {
 
     /**
@@ -53,4 +52,49 @@ public abstract class AbstractEmailProvider
     @Parameter
     @Optional
     protected long writeTimeout;
+
+    /**
+     * @return the host name of the mail server.
+     */
+    public String getHost()
+    {
+        return host;
+    }
+
+    /**
+     * @return the additional custom properties to configure the session.
+     */
+    public Map<String, String> getProperties()
+    {
+        return properties;
+    }
+
+    /**
+     * @return the configured client socket connection timeout.
+     */
+    public long getConnectionTimeout()
+    {
+        return connectionTimeout;
+    }
+
+    /**
+     * @return he configured client socket read timeout.
+     */
+    public long getReadTimeout()
+    {
+        return readTimeout;
+    }
+
+    /**
+     * @return he configured client socket write timeout.
+     */
+    public long getWriteTimeout()
+    {
+        return writeTimeout;
+    }
+
+    /**
+     * @return the port number of the mail server.
+     */
+    public abstract String getPort();
 }

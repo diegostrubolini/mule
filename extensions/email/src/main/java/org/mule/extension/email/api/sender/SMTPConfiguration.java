@@ -6,6 +6,8 @@
  */
 package org.mule.extension.email.api.sender;
 
+import static org.mule.extension.email.internal.util.EmailConstants.PORT_SMTP;
+import org.mule.extension.email.api.AbstractEmailConfiguration;
 import org.mule.runtime.extension.api.annotation.Configuration;
 import org.mule.runtime.extension.api.annotation.Operations;
 import org.mule.runtime.extension.api.annotation.Parameter;
@@ -21,8 +23,16 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
 @Operations(SenderOperations.class)
 @Providers({SMTPConnectionProvider.class})
 @Configuration(name = "smtp")
-public class SMTPConfiguration
+public class SMTPConfiguration extends AbstractEmailConfiguration
 {
+
+    /**
+     * the port number of the mail server.
+     */
+    @Parameter
+    @Optional(defaultValue = PORT_SMTP)
+    protected String port;
+
 
     /**
      * The from address. The person that is going to send the messages.
@@ -30,6 +40,15 @@ public class SMTPConfiguration
     @Parameter
     @Optional
     private String from;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPort()
+    {
+        return port;
+    }
 
     /**
      * @return the address of the person that is going to send the messages.

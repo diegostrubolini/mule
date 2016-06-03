@@ -6,7 +6,8 @@
  */
 package org.mule.extension.email.api.retriever;
 
-import org.mule.extension.email.api.AbstractEmailProvider;
+import org.mule.runtime.api.connection.ConnectionProvider;
+import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.extension.api.annotation.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.Password;
 import org.mule.runtime.extension.api.runtime.ConfigurationProvider;
@@ -16,7 +17,7 @@ import org.mule.runtime.extension.api.runtime.ConfigurationProvider;
  *
  * @since 4.0
  */
-public abstract class AbstractRetrieverProvider extends AbstractEmailProvider
+public abstract class AbstractRetrieverConnectionProvider<RetrieverConfiguration>  implements ConnectionProvider<RetrieverConfiguration, RetrieverConnection>
 {
 
     /**
@@ -31,4 +32,22 @@ public abstract class AbstractRetrieverProvider extends AbstractEmailProvider
     @Parameter
     @Password
     protected String password;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disconnect(RetrieverConnection connection)
+    {
+        connection.disconnect();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ConnectionValidationResult validate(RetrieverConnection connection)
+    {
+        return connection.validate();
+    }
 }
